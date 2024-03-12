@@ -1,0 +1,176 @@
+---
+title: "The Area Under the Receiver Operating Characteristic Curve (AUC-ROC)"
+format:
+  html: 
+    toc: true
+    anchor-sections: false
+    fig-cap-location: bottom
+    tbl-cap-location: top
+    number-sections: false
+    smooth-scroll: true
+    code-fold: false
+    code-overflow: scroll
+    self-contained: True
+    html-math-method: katex
+    linkcolor: "#007FFF"
+    link-external-newwindow: true
+    output-file: "aucroc_output.html"
+    css: style.css
+    page-layout: article
+editor: visual
+---
+
+## 1. Intro
+
+AUC-ROC is a general metric used to evaluate the performance of binary classification models / algorithms like Logistic Regression, Decision Tree, Random Forest, SVM and so on.
+
+Let us review with reference to Support Vector Machine (SVM). To assess how well a SVM model fits a dataset, we can look at the following two metrics:
+
+**Sensitivity:** The probability that the model predicts a positive outcome for an observation when indeed the outcome is positive. This is also called the "true positive rate."
+
+**Specificity:** The probability that the model predicts a negative outcome for an observation when indeed the outcome is negative. This is also called the "true negative rate."
+
+One way to visualize these two metrics is by creating a ROC curve, which stands for "receiver operating characteristic" curve. This is a plot that displays the sensitivity along the y-axis and (1 -- specificity) along the x-axis. One way to quantify how well the logistic regression model does at classifying data is to calculate AUC, which stands for "area under curve."
+
+The value for AUC ranges from 0 to 1. A model that has an AUC of 1 is able to perfectly classify observations into classes while a model that has an AUC of 0.5 does no better than a model that performs random guessing. Reference: [statology-Statistics Simplified-AUC ROC](https://www.statology.org/what-is-a-good-auc-score/ "Click here to visit the web site")**,**
+
+**Interpretation:** Obviously the higher the AUC score, the better the model is able to classify observations into classes. And we know that a model with an AUC score of 0.5 is no better than a model that performs random guessing. There is no magic number that determines if an AUC score is good or bad.
+
+**Categorization:** However If we must label certain scores as good or bad, we can reference the following rule of thumb from Hosmer and Lemeshow in Applied Logistic Regression (p. 177):
+
+-   0.5 = No discrimination
+-   0.5-0.7 = Poor discrimination
+-   0.7-0.8 = Acceptable discrimination
+-   0.8-0.9= Excellent discrimination
+-   \>0.9 = Outstanding discrimination
+
+By these standards, a model with an AUC score below 0.7 would be considered poor and anything higher would be considered acceptable or better.
+
+In the context of machine learning and classification models, discrimination refers to the ability of a model to accurately distinguish between different classes or categories in the dataset. Discrimination is often assessed using metrics such as accuracy, precision, recall, and the Area Under the ROC Curve (AUC). A higher value of these metrics indicates better discrimination, meaning the model is more effective at correctly identifying instances of the positive class while minimizing false positives and false negatives.
+
+It's important to keep in mind that what is considered a "good" AUC score varies by industry.
+
+-   For example, in medical settings researchers often seeking AUC scores above 0.95 because the cost of being wrong is so high.
+-   For example, if we have a model that predicts whether or not a customer will be a repeat customer or not, the price of being wrong is not life-altering so a model with an AUC as low as 0.6 could still be useful.
+
+## 2. Custom Functions for ROC Plot and AUC Categorization
+```{r}
+#| message: false
+#| warning: false
+
+
+rocplot <- function(pred, truth, ...) {
+  predob = prediction(pred, truth)
+  perf = performance(predob, "tpr", "fpr")
+  plot(perf, ...)
+  #area <- auc(truth, pred)
+ 
+   # Get TPR and FPR
+  roc_obj <- roc(response=truth,predictor= pred)
+  tpr <- rev(roc_obj$sensitivities)
+  fpr <- rev(1 - roc_obj$specificities)
+  
+
+  area <- roc_obj$auc
+  area <- format(round(area, 3), nsmall = 3)
+  polygon(c(0, fpr, 1), c(0, tpr, 0), col = "lightblue", lwd = 1)
+  #text(x=0.9, y=0.1, labels = paste("AUC =", area))
+  # the reference x=y line
+  segments(x0=0, y0=0, x1=1, y1=1, col="black", lty=3, lwd = 2)
+    # Add point and text at AUC stat
+  auc_fpr <- findInterval(area, fpr)
+  points(fpr[auc_fpr], tpr[auc_fpr], col = "red", pch = 16, cex = 1.5)
+  # text(fpr[auc_fpr] + 0.05, tpr[auc_fpr] - 0.05, paste0("AUC:", area), col =    "black", font = 0.8)
+  points(x=0.82, y=0.1, col = "red", pch = 16, cex = 1.5)
+  text(x=0.9, y=0.1, paste0("AUC:", area), col =    "black", font = 0.8)
+}
+
+
+# Function to categorize AUC strength
+categorize_auc <- function(auc_value) {
+  if (abs(auc_value) > 0.9) {
+    return("Outstanding discrimination")
+  } else if (abs(auc_value) > 0.8) {
+    return("Excellent discrimination")
+  } else if (abs(auc_value) > 0.7) {
+    return("Acceptable discrimination")
+  } else if (abs(auc_value) > 0.5) {
+    return("Poor discrimination")
+  } else if (abs(auc_value) == 0.5) {
+    return("No discrimination")
+  } else {
+    return("incorrect predictions by the Model")
+  }
+}
+
+```
+
+## 3. Importing Data and Declaring Variables
+```{r}
+#| message: false
+#| warning: false
+
+
+library(caret)
+library(e1071)
+library(ROCR)
+library(pROC)
+# Import dataset
+mydata <- read.csv("C:/R_Projects/Dataset/Diabetes.csv")
+# Declaring all variables and Parameters
+mdependvar    <- 'diabetes'
+n=which(colnames(mydata)== mdependvar)
+# Declaring formula for model building, you get output like this diabetes~.
+f2 <- as.formula(paste(text=mdependvar,"~", "."))
+
+
+# Converting dependent variable to factor if it is not already a factor
+if (!is.factor(mydata[,n])) {
+  mydata[,n] <- as.factor(mydata[,n])
+}
+
+```
+
+## 4. Train and Test Dataset and Creating SVM Model
+```{r}
+#| message: false
+#| warning: false
+
+
+# Split Dataset as Train and Test
+set.seed(123)
+indms <- sample(2, nrow(mydata), replace = TRUE, prob = c(0.7,0.3))
+trainData <- mydata[ indms == 1,]
+testData <- mydata [indms ==2,]
+
+model_svm <- svm(f2, data=trainData)
+pred_svm <- predict(model_svm, testData[,-n])
+cmx_svm <- confusionMatrix(pred_svm, testData[,n])
+
+predicted_probs<-as.numeric(pred_svm)
+actual_labels <-as.numeric(testData[,n])
+auc_value <- round(auc(response=actual_labels,predictor=predicted_probs),3)
+mauccategory<-categorize_auc(auc_value)
+```
+
+
+## 5. AUC Curve and Categorization
+
+Based on the AUC statistics, we could categorize it as **"`r mauccategory`"** with the AUC of **`r auc_value`**.
+
+```{r}
+#| message: false
+#| warning: false
+#| fig-align: center
+#| echo: false
+#| fig-format: png
+#| fig-width: 8
+#| fig-asp: 0.75
+
+rocplot(pred = predicted_probs, 
+        truth = actual_labels, 
+        col="blue",
+        main = "ROC Curve with Colored AUC", 
+        col.main = "darkblue",
+        quiet=TRUE)
+```

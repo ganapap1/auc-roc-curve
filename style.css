@@ -1,0 +1,294 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.title {
+  font-family: Arial, sans-serif;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.title-font {
+  font-size: 16px;
+}
+
+.subtitle-font {
+  font-size: 8px;
+}
+
+.mediumtext-font {
+  font-size: 11px;
+}
+
+.smalltext-font {
+  font-size: 2px;
+}
+
+button {
+  background-color: #3e76b7;
+  /* Green */
+  border: none;
+  color: white;
+  padding: 5px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+  border-radius: 20px;
+  border: solid 3px white;
+}
+
+input {
+  padding: 2px;
+  background-color: rgb(239, 238, 181);
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+
+.container {
+  width: 500px;
+  height: 600px;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1rem;
+  border-radius: 4px;
+}
+
+.chartBoxTitle {
+  width: 100%;
+  height: 40px;
+  padding: 10px;
+  background: #BDD7EE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chartBoxSubTitle {
+  width: 100%;
+  height: 23px;
+  padding: 5px;
+  background: #BDD7EE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Verdana", sans-serif;
+  font-size: 18px;
+  font-style: italic;
+}
+
+.chartCard {
+  width: 100vw;
+  height: calc(100vh-40px);
+  padding: 15px;
+  background: #BDD7EE;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chartBox {
+  width: 450px;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 20px;
+  border: solid 3px #BDD7EE;
+  background: white;
+}
+
+body {
+  text-align: justify;
+  width: 100%;
+  color: black;
+  margin: auto;
+  margin-top: 20px;
+  background-color: #f8f8f8;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  font-family: "Verdana", sans-serif;
+  font-size: 40px;
+  font-style: italic;
+}
+
+h2 {
+padding: 4px;
+background-color: teal;
+color: white;
+vertical-align: middle;
+margin-top: 5px;
+margin-bottom: 0px;
+text-align: center;
+font-family: "Georgia", serif;
+font-size: 24px;
+font-style: italic;
+border: solid 1px teal;
+}
+
+h3 {
+  text-align: center;
+  font-family: "Verdana", sans-serif;
+  font-size: 20px;
+  font-style: italic;
+}
+
+h4 {
+  text-align: center;
+  font-family: "Verdana", sans-serif;
+  font-size: 16px;
+  font-style: italic;
+}
+
+h5 {
+  text-align: left;
+  font-family: "Verdana", sans-serif;
+  font-size: 10px;
+  font-style: normal;
+}
+
+h6 {
+  text-align: left;
+  font-family: "Verdana", sans-serif;
+  font-size: 10px;
+  font-style: normal;
+}
+
+
+.two-columns {
+ column-count: 2;
+ float: left;
+ column-gap: 20px;
+ text-align: justify;
+ text-justify: inter-word;
+ font-family: "Helvetica", sans-serif;
+ font-size: 14px;
+ font-style: normal;
+ word-wrap: normal;
+ line-height: 1.15;
+ margin-top: 10px;
+ margin-bottom: 10px;
+ margin-left: 5px;
+ margin-right: 5px;
+}
+
+.two-columns-with-points {
+  column-count: 2;
+  float: left;
+  column-gap: 20px;
+  text-align: left;
+  font-family: "Helvetica", sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  word-wrap: normal;
+  line-height: 1.15;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+ }
+
+.two-plots-sidebyside {
+ float: left;
+ width: 50%;
+ text-align: justify;
+ font-size: 12px;
+ font-style: normal;
+ word-wrap: normal;
+ line-height: 1.15;
+ margin-top: 10px;
+ margin-bottom: 10px;
+ margin-left: 5px;
+ margin-right: 5px;
+}
+
+.header-box {
+ padding: 4px;
+ background-color: teal;
+ color: white;
+ vertical-align: middle;
+ margin-top: 30px;
+ margin-bottom: 0px;
+ text-align: center;
+ font-family: "Georgia", serif;
+ font-size: 24px;
+ font-style: italic;
+ border: solid 1px white;
+}
+
+.table-format {
+ width: 4rem;
+ height: 2rem;
+ border: 1px solid #ccc;
+ text-align: center;
+ font-family: "Georgia", serif;
+ font-size: 12px;
+}
+
+.single-columns {
+ column-count: 1;
+ float: left;
+ text-align: justify;
+ text-justify: inter-word;
+ font-family: "Helvetica", sans-serif;
+ font-size: 14px;
+ font-style: normal;
+ word-wrap: normal;
+ line-height: 1.15;
+ margin-top: 10px;
+ margin-bottom: 10px;
+ margin-left: 5px;
+ margin-right: 5px;
+}
+
+/* Create four equal columns that floats next to each other */
+.column {
+  float: left;
+  width: 25%;
+  padding: 10px;
+  height: 300px; /* Should be removed. Only for demonstration */
+}
+
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+  /* Custom CSS for floating TOC */
+  .floating-toc {
+    position:fixed;
+    top: 20%;
+    left: 10px;
+    width: 200px;
+    font-family: "Georgia", serif;
+    font-size: 11px;
+    background-color: teal;
+    color: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    z-index: 1000; /* Ensure the TOC appears above other content */
+}
+
+.five-columns {
+  column-count: 5;
+  float: left;
+  column-gap: 10px;
+  text-align: center;
+  text-justify: inter-word;
+  font-family: "Helvetica", sans-serif;
+  font-size: 12px;
+  font-style: normal;
+  word-wrap: normal;
+  line-height: 1.15;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+ }
